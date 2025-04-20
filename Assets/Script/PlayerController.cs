@@ -15,15 +15,25 @@ public class PlayerController : MonoBehaviour
     public float gravityModifier = 1;
     public bool isOnGround = true;
     public bool gameOver;
+    public GameOverScreen gameOverScreen;
+    private float startTime;
+    private float endTime;
+    public float Score;
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        Physics.gravity = new Vector3(0, -9.81f, 0); // Reset gravity to default
+        Physics.gravity *= gravityModifier; // Apply modifier once
+
         playerRb = GetComponent<Rigidbody>();
         playerAnim = GetComponent<Animator>();
         playerAudio = GetComponent<AudioSource>();
-        Physics.gravity *= gravityModifier;
-       
+        
+        startTime = Time.time;
+
+        isOnGround = Physics.Raycast(transform.position, Vector3.down, 1.1f);
     }
 
     // Update is called once per frame
@@ -50,12 +60,15 @@ public class PlayerController : MonoBehaviour
 
         }else if (collision.gameObject.CompareTag("Obstacle"))
         { Debug.Log("Game Over");
+            endTime = Time.time;
+            Score = endTime - startTime;
             gameOver = true;
             playerAnim.SetBool("Death_b", true);
             playerAnim.SetInteger("DeathType_int", 1);
             explosionParticle.Play();
             dirtParticle.Stop();
-            playerAudio.PlayOneShot(crashSound); 
+            playerAudio.PlayOneShot(crashSound);
+            gameOverScreen.SetUp(Score);
         }
     }
 }
