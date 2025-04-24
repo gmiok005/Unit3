@@ -33,7 +33,7 @@ public class PlayerController : MonoBehaviour
         
         startTime = Time.time;
 
-        isOnGround = Physics.Raycast(transform.position, Vector3.down, 1.1f);
+        isOnGround = Physics.Raycast(transform.position, Vector3.down, 1.1f); 
     }
 
     // Update is called once per frame
